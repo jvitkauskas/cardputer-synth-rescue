@@ -131,10 +131,10 @@ static void rescue(const jl::Info &info) {
         ulog("%s", err);
         return;
     }
-    ulog("%s: m-bootloader 2.3 + fm1-base", img.name);
-    ulog("template (USB MIDI updates, plays keys).");
-    ulog("Clean install up to 0xFEFFF: the old");
-    ulog("firmware, presets, settings are ERASED.");
+    ulog("%s: m-bootloader 2.3 only. Everything", img.name);
+    ulog("else up to 0xFEFFF is ERASED (the old");
+    ulog("firmware, presets, settings); it then");
+    ulog("waits in MIDI mode for a firmware.");
     if (smk37) ulog("Kept: 0xC0000-0xC1FFF (calibration,");
     ulog(smk37 ? "Bluetooth), 0xFF000-. Backup first." : "Kept: 0xFF000-. A backup comes first.");
     ui::status("ENTER continue  ESC cancel");

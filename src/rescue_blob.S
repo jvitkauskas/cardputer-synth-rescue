@@ -12,6 +12,4 @@
     .endm
 
     piece rescue_fm1_boot, "rescue/fm1/boot.bin"
-    piece rescue_fm1_app, "rescue/fm1/app.bin"
     piece rescue_smk37_boot, "rescue/smk37/boot.bin"
-    piece rescue_smk37_app, "rescue/smk37/app.bin"

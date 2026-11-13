@@ -1,8 +1,8 @@
-// Installs a rescue image (m-bootloader + a minimal firmware, see
-// rescue/README.md) with M-Flasher's rules, plus a clean install: every
-// writable sector below 0xFF000 ends up exactly as the image says, the boot
-// area and the firmware written, everything else erased (no leftovers of
-// earlier firmwares). Never touched: 0xFF000-0xFFFFF (key_mac, and on the
+// Installs a rescue image (m-bootloader's boot area, see rescue/README.md)
+// with M-Flasher's rules, plus a clean install: every writable sector below
+// 0xFF000 ends up exactly as the image says, the boot area written,
+// everything else erased (no firmware, no leftovers of earlier ones), so
+// m-bootloader opens its MIDI mode at the next start and waits for a firmware. Never touched: 0xFF000-0xFFFFF (key_mac, and on the
 // SMK-37 m-bootloader's copy of the calibration) and, on the SMK-37,
 // 0xC0000-0xC1FFF (Bluetooth pairing, the factory calibration).
 #pragma once
@@ -22,15 +22,15 @@ enum Board { FM1, SMK37 };
 
 struct Image {
     const char *name;            // for the screen
-    const uint8_t *boot, *app;   // 0x00000-0x03FFF, then from 0x04000
-    uint32_t boot_len, app_len;  // as embedded
-    uint32_t boot_crc, app_crc;  // as built (src/rescue_info.h)
+    const uint8_t *boot;         // 0x00000-0x03FFF
+    uint32_t boot_len;           // as embedded
+    uint32_t boot_crc;           // as built (src/rescue_info.h)
     uint32_t keep_lo, keep_hi;   // a protected range below END (empty: equal)
 };
 
 const Image &image(Board b);
 
-// The embedded image pieces are intact (their CRC32s match the build's).
+// The embedded boot area is intact (their CRC32s match the build's).
 bool image_ok(const Image &img, char *err, size_t errlen);
 
 struct Plan {

@@ -253,7 +253,7 @@ void run(bool switch_on) {
         }
 
         char body[96];
-        snprintf(body, sizeof body, "The %s's old firmware and settings are replaced.", unit.name);
+        snprintf(body, sizeof body, "The %s gets a fresh bootloader; its old firmware and settings are erased.", unit.name);
         Page confirm = {art, ui::ORANGE, "Ready to repair", body, "Y", "repair now", "esc"};
         if (ask(confirm, "y\x1b", false, true) != 'y') leave(true);
 
@@ -279,7 +279,7 @@ void run(bool switch_on) {
             }
         }
         jl::restart(err, sizeof err);
-        snprintf(done_text, sizeof done_text, "The %s restarts as a simple synth. Install any firmware later.",
+        snprintf(done_text, sizeof done_text, "The %s waits in MIDI mode: install a firmware from your phone or computer.",
                  unit.name);
         Page ok = {"success", ui::GREEN, "Repaired!", done_text, "ENTER", "to finish", nullptr};
         ask(ok, "\n");

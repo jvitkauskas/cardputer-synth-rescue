@@ -6,8 +6,8 @@
 #include "jl.h"
 #include "rescue_info.h"
 
-extern "C" const uint8_t rescue_fm1_boot[], rescue_fm1_boot_end[], rescue_fm1_app[], rescue_fm1_app_end[];
-extern "C" const uint8_t rescue_smk37_boot[], rescue_smk37_boot_end[], rescue_smk37_app[], rescue_smk37_app_end[];
+extern "C" const uint8_t rescue_fm1_boot[], rescue_fm1_boot_end[];
+extern "C" const uint8_t rescue_smk37_boot[], rescue_smk37_boot_end[];
 
 namespace writer {
 
@@ -18,15 +18,12 @@ static uint8_t sector_buf[SECTOR];
 
 const Image &image(Board b) {
     static const Image fm1 = {
-        "FM-1", rescue_fm1_boot, rescue_fm1_app,
-        (uint32_t)(rescue_fm1_boot_end - rescue_fm1_boot), (uint32_t)(rescue_fm1_app_end - rescue_fm1_app),
-        RESCUE_FM1_BOOT_CRC32, RESCUE_FM1_APP_CRC32, 0, 0,
+        "FM-1", rescue_fm1_boot, (uint32_t)(rescue_fm1_boot_end - rescue_fm1_boot), RESCUE_FM1_BOOT_CRC32, 0, 0,
     };
     // BTIF (Bluetooth address, pairings) and USRTRIM (the factory calibration)
     static const Image smk37 = {
-        "SMK-37", rescue_smk37_boot, rescue_smk37_app,
-        (uint32_t)(rescue_smk37_boot_end - rescue_smk37_boot), (uint32_t)(rescue_smk37_app_end - rescue_smk37_app),
-        RESCUE_SMK37_BOOT_CRC32, RESCUE_SMK37_APP_CRC32, 0xC0000, 0xC2000,
+        "SMK-37", rescue_smk37_boot, (uint32_t)(rescue_smk37_boot_end - rescue_smk37_boot), RESCUE_SMK37_BOOT_CRC32,
+        0xC0000, 0xC2000,
     };
     return b == SMK37 ? smk37 : fm1;
 }
@@ -36,11 +33,10 @@ static bool is_protected(const Image &img, uint32_t s) {
     return a >= END || (a >= img.keep_lo && a < img.keep_hi);
 }
 
-// The image's bytes for sector s: boot area, app area, then erased flash.
+// The image's bytes for sector s: the boot area, then erased flash.
 static const uint8_t *target(const Image &img, uint32_t s) {
     uint32_t a = s * SECTOR;
     if (a < BOOT_AREA) return img.boot + a;
-    if (a < BOOT_AREA + img.app_len) return img.app + (a - BOOT_AREA);
     if (!blank[0]) memset(blank, 0xFF, sizeof blank);
     return blank;
 }
@@ -58,15 +54,11 @@ static uint32_t target_crc(const Image &img, uint32_t first, uint32_t count) {
 }
 
 bool image_ok(const Image &img, char *err, size_t errlen) {
-    uint32_t app_end = BOOT_AREA + img.app_len;
-    if (img.boot_len != BOOT_AREA || img.app_len % SECTOR || app_end > END ||
-        (img.keep_hi > img.keep_lo && app_end > img.keep_lo)) {
-        snprintf(err, errlen, "%s rescue image sizes are wrong (%lu, %lu)", img.name, (unsigned long)img.boot_len,
-                 (unsigned long)img.app_len);
+    if (img.boot_len != BOOT_AREA) {
+        snprintf(err, errlen, "%s rescue image size is wrong (%lu)", img.name, (unsigned long)img.boot_len);
         return false;
     }
-    if (jl::crc32_update(0, img.boot, img.boot_len) != img.boot_crc ||
-        jl::crc32_update(0, img.app, img.app_len) != img.app_crc) {
+    if (jl::crc32_update(0, img.boot, img.boot_len) != img.boot_crc) {
         snprintf(err, errlen, "the %s rescue image in this app is damaged: reinstall the app", img.name);
         return false;
     }

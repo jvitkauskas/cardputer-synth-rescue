@@ -8,18 +8,17 @@ The Cardputer puts the unit into its ROM download mode through its own USB-C
 port, becomes the USB host, starts
 [M-Flasher](https://github.com/jvitkauskas/m-flasher)'s flash loader (bundled,
 MIT, from [m-bootloader](https://github.com/jvitkauskas/m-bootloader)), backs
-the whole 1 MiB flash up to the SD card, and installs a rescue image:
-m-bootloader and a minimal open firmware
-([fm1-base](https://github.com/charlesvestal/fm1-base)'s template: plays the
-keys, takes any new firmware over USB MIDI afterwards).
+the whole 1 MiB flash up to the SD card, and installs a fresh
+m-bootloader with no firmware: the unit then waits in m-bootloader's MIDI mode
+and takes a firmware from that firmware's installer, from a phone or computer.
 
 - **Guided mode** (the default): one step a screen, a picture, a few large
   words and one key a step (below).
 - **Advanced mode**: the log on screen, each step under your control,
   self-tests, and a hand-off to a PC for other tools.
 
-The rescue is a clean install: every sector up to `0xFEFFF` ends up as the
-image says (no leftovers of earlier firmwares); `0xFF000`-`0xFFFFF`, and on the
+The rescue is a clean install: the boot area is written and every other sector
+up to `0xFEFFF` is erased (no leftovers of earlier firmwares); `0xFF000`-`0xFFFFF`, and on the
 SMK-37 `0xC0000`-`0xC1FFF` (Bluetooth pairing, factory calibration), are never
 touched. It backs up first (or, without an SD card, warns and goes on only if
 told to), writes only what differs, and verifies every run with the chip's

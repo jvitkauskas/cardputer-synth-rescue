@@ -10,7 +10,7 @@ come from elsewhere and keep their own licences.
 | M-Flasher's flash loader (`mflr-loader`, from [m-bootloader](https://github.com/jvitkauskas/m-bootloader)) | `src/mflr_loader.h` | MIT, (c) 2026 Julius Vitkauskas |
 | The ROM and loader protocol, ported from [M-Flasher](https://github.com/jvitkauskas/m-flasher)'s `jl.rs`, which follows [jl-uboot-tool](https://github.com/kagaimiq/jl-uboot-tool) | `src/jl.cpp`, `src/uboot_host.cpp` | MIT, (c) 2026 Julius Vitkauskas; jl-uboot-tool MIT, (c) 2023 Andrey Grigoryev |
 | The restart program (34 bytes), from pi32v2-isa's `tools/hwtest/app/reset.S` as in M-Flasher | `src/jl.cpp` | MIT-0 |
-| The rescue images: m-bootloader; fm1-base and felucca-bsp; JieLi AC79 SDK files; fonts in the template; a flash header, file table and chip-key record from M-VAVE's packages | `rescue/` | see [rescue/README.md](rescue/README.md) and `rescue/LICENSES/`: MIT, MPL-2.0 (source at the commits named there), Apache-2.0, SIL OFL 1.1 |
+| The rescue images: m-bootloader's boot areas, on a flash header, file table and chip-key record from M-VAVE's packages | `rescue/` | MIT ([rescue/README.md](rescue/README.md), `rescue/LICENSES/`) |
 | The guided mode's fonts, rendered from DejaVu Sans and DejaVu Sans Bold | `src/ui_fonts.h` (made by `tools/make_fonts.py`) | Bitstream Vera licence, DejaVu changes public domain ([LICENSES/DejaVu-fonts.txt](LICENSES/DejaVu-fonts.txt)) |
 
 Timings and findings, not code, come from
