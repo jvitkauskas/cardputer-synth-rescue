@@ -153,3 +153,5 @@ Run on battery, with the unit off when you start.
 MIT ([LICENSE](LICENSE)). The parts from elsewhere (the M-Flasher loader, the
 rescue images, the fonts, the libraries linked into the firmware) keep their
 own licences: see [THIRD-PARTY.md](THIRD-PARTY.md).
+
+Related: try FM-1 firmwares in the browser with the free community [FM-1 Emulator](https://fm1-emulator.atst.tools/).
